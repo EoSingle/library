@@ -37,18 +37,26 @@ class ChildrenPrice(Price):
         return 1
 
 class Book:
-    REGULAR = RegularPrice()
-    NEW_RELEASE = NewReleasePrice()
-    CHILDREN = ChildrenPrice()
 
-    def __init__(self, title: str, price: Price):
+    REGULAR: int = 0
+    NEW_RELEASE: int = 1
+    CHILDREN: int = 2
+
+    def __init__(self, title: str, price_code: int):
         self.title = title
-        self.price = price
-
-    def get_charge(self, days_rented: int) -> float:
+        self.price = self.create_price(price_code)
+    
+    def create_price(self, price_code: int):  
+        if price_code == Book.NEW_RELEASE:
+            return NewReleasePrice()
+        elif price_code == Book.CHILDREN:
+            return ChildrenPrice()
+        return RegularPrice()
+    
+    def get_charge(self, days_rented: int):
         return self.price.get_charge(days_rented)
 
-    def get_frequent_renter_points(self, days_rented: int) -> int:
+    def get_frequent_renter_points(self, days_rented: int):
         return self.price.get_frequent_renter_points(days_rented)
 
 class Rental:
